@@ -14,8 +14,10 @@ function client() {
     const local = /localhost|127\.0\.0\.1/.test(url);
     g.__sql = postgres(url, {
       ssl: local ? false : "require",
-      max: local ? 5 : 1,
+      max: local ? 5 : 2,
       idle_timeout: 20,
+      connect_timeout: 10,
+      onnotice: () => {},
       prepare: false // compatible con el pooler de Supabase
     });
   }
@@ -74,7 +76,9 @@ export async function ready() {
   if (!g.__dbReady) {
     g.__dbReady = (async () => {
       const db = client();
-      await db.unsafe(SCHEMA);
+      // Crear tablas solo la primera vez: evita bloqueos en cada arranque en frío.
+      const [{ ok }] = await db`select to_regclass('public.page_views') is not null as ok`;
+      if (!ok) await db.unsafe(SCHEMA);
       await db`insert into settings (id, data) values (1, ${db.json(DEFAULT_SETTINGS)}) on conflict (id) do nothing`;
       const [{ n }] = await db`select count(*)::int as n from categories`;
       if (n === 0) {
