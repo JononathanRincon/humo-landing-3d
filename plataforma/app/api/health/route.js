@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql, ready } from "@/lib/db";
+import postgres from "postgres";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,15 @@ export async function GET(req) {
       from pg_stat_activity where datname = current_database() and pid <> pg_backend_pid() and state <> 'idle' order by seg desc limit 15`), out);
   await step("bloqueos", async () => (await sql`select count(*)::int as n from pg_locks where not granted`)[0].n, out);
   if (fix) await step("liberar-viejas", async () => (await sql`select count(pg_terminate_backend(pid))::int as n from pg_stat_activity where datname = current_database() and pid <> pg_backend_pid() and usename = current_user and state <> 'idle' and now() - coalesce(xact_start, query_start) > interval '2 minutes'`)[0].n, out);
+  await step("concurrentes (pool actual)", async () => (await Promise.all([1,2,3,4,5].map(i => sql`select ${i}::int as i, pg_sleep(0.05)`))).length, out);
+  const np = process.env.POSTGRES_URL_NON_POOLING;
+  if (np) {
+    const u = new URL(np); for (const k of ["supa", "pgbouncer", "sslmode"]) u.searchParams.delete(k);
+    out.push({ nonPooling: { host: u.hostname.replace(/^[^.]+/, "*"), port: u.port } });
+    const c = postgres(u.toString(), { ssl: "require", max: 1, prepare: false, connect_timeout: 6, onnotice: () => {} });
+    await step("concurrentes (sesión)", async () => (await Promise.all([1,2,3,4,5].map(i => c`select ${i}::int as i, pg_sleep(0.05)`))).length, out);
+    c.end({ timeout: 1 }).catch(() => {});
+  }
   await step("ready", () => ready().then(() => "ok"), out);
   await step("settings", async () => (await sql`select data->>'name' as n, (data->>'demoVersion') as v from settings where id = 1`)[0] || null, out);
   await step("productos", async () => (await sql`select count(*)::int as n from products`)[0].n, out);
