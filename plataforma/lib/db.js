@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { SEED_CATEGORIES, SEED_PRODUCTS } from "./seed";
+import { SEED_CATEGORIES, SEED_PRODUCTS, DEMO_IMAGES, DEMO_VERSION } from "./seed";
 import { DEFAULT_SETTINGS } from "./defaults";
 
 const g = globalThis;
@@ -88,6 +88,14 @@ export async function ready() {
             values (${ids[p.category]}, ${p.name}, ${p.description}, ${p.price}, ${p.image || null},
                     ${db.json(p.extras || [])}, ${db.json(p.layers || [])}, ${!!p.featured}, ${i})`;
         }
+      }
+      // Contenido de la demo: completa fotos y videos que falten sin tocar lo que el dueño ya subió.
+      const [{ data }] = await db`select data from settings where id = 1`;
+      if ((data.demoVersion || 0) < DEMO_VERSION) {
+        for (const [name, url] of Object.entries(DEMO_IMAGES))
+          await db`update products set image_url = ${url} where name = ${name} and (image_url is null or image_url = '' or image_url = '/media/hero.webp')`;
+        const media = { ...DEFAULT_SETTINGS.media, ...Object.fromEntries(Object.entries(data.media || {}).filter(([, v]) => v)) };
+        await db`update settings set data = ${db.json({ ...data, media, demoVersion: DEMO_VERSION })} where id = 1`;
       }
     })().catch(e => { g.__dbReady = null; throw e; });
   }

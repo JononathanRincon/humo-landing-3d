@@ -25,7 +25,7 @@ export default function Media() {
     setErr(""); setPct(p => ({ ...p, [slot.k]: 0 }));
     try {
       const url = await uploadFile(file, { folder: "web", max: 2400, onProgress: v => setPct(p => ({ ...p, [slot.k]: v })) });
-      await save({ ...media, [slot.k]: url }, `${slot.title} actualizado`);
+      await save({ ...media, [slot.k]: url, ...(slot.kind === "video" ? { ["p" + slot.k.slice(1)]: "" } : {}) }, `${slot.title} actualizado`);
     } catch (x) { setErr(x.message); } finally { setPct(p => { const n = { ...p }; delete n[slot.k]; return n; }); }
   }
   if (!media) return <p className="muted">{err || "Cargando…"}</p>;
@@ -46,7 +46,7 @@ export default function Media() {
               <div className={a.actions} style={{ marginTop: "auto" }}>
                 <label className="btn btn-solid btn-sm">{p !== undefined ? `Subiendo ${p}%` : url ? "Reemplazar" : "Subir"}
                   <input type="file" hidden accept={slot.kind === "video" ? "video/mp4,video/webm,video/quicktime" : "image/*"} disabled={p !== undefined} onChange={e => pick(slot, e)} /></label>
-                {url && slot.kind === "video" && <button type="button" className="btn btn-ghost btn-sm" onClick={() => save({ ...media, [slot.k]: "" }, `${slot.title} quitado`)}>Quitar</button>}
+                {url && slot.kind === "video" && <button type="button" className="btn btn-ghost btn-sm" onClick={() => save({ ...media, [slot.k]: "", ["p" + slot.k.slice(1)]: "" }, `${slot.title} quitado`)}>Quitar</button>}
               </div>
             </div>
           </div>;

@@ -8,8 +8,8 @@ const extrasBurger = [
   { name: "Huevo", price: 2500 }
 ];
 
-export const SEED_PRODUCTS = [
-  { category: "Hamburguesas", name: "La Brasa", price: 38000, featured: true, image: "/media/hero.webp",
+export const SEED_PRODUCTS_BASE = [
+  { category: "Hamburguesas", name: "La Brasa", price: 38000, featured: true,
     description: "Nuestra firma: carne madurada a la leña, cheddar fundido y tocineta ahumada en casa.",
     extras: extrasBurger,
     layers: [
@@ -39,3 +39,22 @@ export const SEED_PRODUCTS = [
   { category: "Bebidas", name: "Limonada de coco", price: 10000, description: "500 ml." },
   { category: "Bebidas", name: "Cerveza artesanal", price: 14000, description: "Rubia o roja, 330 ml." }
 ];
+
+// Fotos de la demo (también se aplican a una base de datos ya creada, solo donde no hay foto).
+export const DEMO_IMAGES = {
+  "La Brasa": "/media/carta/m1-la-brasa.webp",
+  "Doble Smash": "/media/carta/m2-doble-smash.webp",
+  "Carbón": "/media/carta/m3-carbon.webp",
+  "La Tropical": "/media/carta/m4-la-tropical.webp",
+  "Pollo Crunch": "/media/carta/m5-pollo-crunch.webp",
+  "Huerta": "/media/carta/m6-huerta.webp",
+  "Papas rústicas": "/media/acompanantes/a1-papas.webp",
+  "Aros de cebolla": "/media/acompanantes/a2-aros.webp",
+  "Yuca frita": "/media/acompanantes/a3-yuca.webp",
+  "Malteada de arequipe": "/media/acompanantes/a4-malteada.webp",
+  "Limonada de coco": "/media/acompanantes/a5-limonada.webp",
+  "Cerveza artesanal": "/media/acompanantes/a6-cerveza.webp"
+};
+export const DEMO_VERSION = 1;
+
+export const SEED_PRODUCTS = SEED_PRODUCTS_BASE.map(p => ({ ...p, image: DEMO_IMAGES[p.name] || null }));

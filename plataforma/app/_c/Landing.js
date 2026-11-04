@@ -4,13 +4,14 @@ import { money, digits } from "@/lib/format";
 import s_ from "./landing.module.css";
 
 function SceneVideo({ src, poster, loop, onEnd, active }) {
+  const near = e => { const v = e.currentTarget; if (v.duration && v.currentTime > v.duration - 3) onEnd?.(); };
   const ref = useRef(null);
   useEffect(() => {
     const v = ref.current; if (!v || !src) return;
     if (active) { try { v.currentTime = 0; } catch {} v.play().catch(() => {}); } else v.pause();
   }, [active, src]);
   if (!src) return <img className={s_.media} src={poster} alt="" />;
-  return <video ref={ref} className={s_.media} src={active ? src : undefined} poster={poster} muted playsInline loop={loop} preload="none" onEnded={onEnd} />;
+  return <video ref={ref} className={s_.media} src={active ? src : undefined} poster={poster} muted playsInline loop={loop} preload="none" onEnded={onEnd} onTimeUpdate={near} />;
 }
 
 function Scene({ n, title, text, src, poster, loop, children, side }) {
@@ -65,7 +66,7 @@ export default function Landing({ s, featured, hero, status }) {
       <section id="inicio" className={s_.hero}>
         <div className={s_.sceneMedia}>
           {s.media.v1
-            ? <video className={s_.media} src={s.media.v1} poster={s.media.hero} autoPlay muted loop playsInline preload="auto" />
+            ? <video className={s_.media} src={s.media.v1} poster={s.media.p1 || s.media.hero} autoPlay muted loop playsInline preload="auto" />
             : <img className={`${s_.media} ${s_.kb}`} src={s.media.hero} alt={hero ? `Hamburguesa ${hero.name}` : ""} />}
         </div>
         <div className={s_.heroShade} />
@@ -81,14 +82,14 @@ export default function Landing({ s, featured, hero, status }) {
       </section>
 
       <div id="escena-02" />
-      <Scene n="01" title="El armado" text={s.copy.scene2} src={s.media.v2} poster={s.media.hero} />
-      <Scene n="02" title="Anatomía" text={hero ? `${hero.name}: ${s.copy.scene3.toLowerCase()}` : s.copy.scene3} src={s.media.v3} poster={s.media.despiece}
+      <Scene n="01" title="El armado" text={s.copy.scene2} src={s.media.v2} poster={s.media.p2 || s.media.hero} />
+      <Scene n="02" title="Anatomía" text={hero ? `${hero.name}: ${s.copy.scene3.toLowerCase()}` : s.copy.scene3} src={s.media.v3} poster={s.media.p3 || s.media.despiece}
         side={layers.length > 0 && (
           <ol className={s_.layers} aria-label="Ingredientes de arriba hacia abajo">
             {layers.map((l, i) => <li key={i} style={{ transitionDelay: `${i * 60}ms` }}><span>{l.name}</span><span className="num">{l.grams} g</span></li>)}
             <li className={s_.tot}><span>Total</span><span className="num">{total} g</span></li>
           </ol>)} />
-      <Scene n="03" title="Servida" text={s.copy.scene4} src={s.media.v4} poster={s.media.hero} loop>
+      <Scene n="03" title="Servida" text={s.copy.scene4} src={s.media.v4} poster={s.media.p4 || s.media.hero} loop>
         {hero && <div className={s_.cta}>
           <h3>{hero.name}</h3>
           <div className={`${s_.price} num`}>{m(hero.price)}</div>

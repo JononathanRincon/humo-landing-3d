@@ -67,3 +67,12 @@
 .phone { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.4rem); margin: 10px 0 18px; user-select: all }
 .foot { border-top: 1px solid var(--line); padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); font-size: .9rem }
 .footIn { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap }
+
+/* Celular: el video horizontal se muestra completo como una franja de cine centrada */
+@media (max-width: 760px) and (orientation: portrait) {
+  .scene .media { position: absolute; left: 50%; top: 44%; height: min(46svh, 92vw); width: auto; aspect-ratio: 16 / 9; max-width: none; transform: translate(-50%, -50%) }
+  .scene .shade { background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.6) 24%, transparent 42%, transparent 70%, rgba(0,0,0,.4) 100%) }
+  .cta { top: calc(8svh + 68px); bottom: auto; right: var(--gut-r); left: var(--gut-l); flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; text-align: left }
+  .cta h3 { font-size: 1.6rem; width: 100% }
+  .price { font-size: 1.6rem; margin: 0 }
+}

@@ -23,7 +23,14 @@ export const DEFAULT_SETTINGS = {
   media: {
     hero: "/media/hero.webp",
     despiece: "/media/despiece.webp",
-    v1: "", v2: "", v3: "", v4: ""
+    v1: "/media/videos/v1-brasa.mp4",
+    v2: "/media/videos/v2-armado.mp4",
+    v3: "/media/videos/v3-despiece.mp4",
+    v4: "/media/videos/v4-giro.mp4",
+    p1: "/media/escenas/poster-v1-brasa.webp",
+    p2: "/media/escenas/poster-v2-armado.webp",
+    p3: "/media/escenas/poster-v3-despiece.webp",
+    p4: "/media/escenas/poster-v4-giro.webp"
   },
   copy: {
     heroTitle: "Nace en la brasa.",
