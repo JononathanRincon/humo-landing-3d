@@ -1,0 +1,66 @@
+.app { min-height: 100svh; padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)) }
+.head { position: sticky; top: 0; z-index: 20; background: rgba(18,13,10,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px) }
+.headIn { max-width: 760px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px var(--gut-r) 8px var(--gut-l) }
+.brand { font-family: var(--f-display); font-weight: 900; font-size: 1.5rem; letter-spacing: .06em; text-decoration: none }
+.headR { display: flex; gap: 8px }
+.chips { max-width: 760px; margin: 0 auto; display: flex; gap: 8px; overflow-x: auto; padding: 4px var(--gut-r) 12px var(--gut-l); scrollbar-width: none }
+.chips::-webkit-scrollbar { display: none }
+.chip { flex: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-size: .9rem; color: var(--muted); white-space: nowrap }
+.chipOn { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600 }
+.intro { max-width: 760px; margin: 0 auto; padding: 28px var(--gut-r) 4px var(--gut-l) }
+.intro h1 { font-size: clamp(3rem, 12vw, 5rem); margin-top: 8px }
+.closed { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(236,91,60,.1); border: 1px solid rgba(236,91,60,.3); font-size: .92rem }
+.list { max-width: 760px; margin: 0 auto; padding: 0 var(--gut-r) 0 var(--gut-l) }
+.cat { padding-top: 28px; scroll-margin-top: 110px }
+.cat h2 { font-size: 2rem; margin-bottom: 12px }
+.items { display: flex; flex-direction: column; gap: 10px }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) 112px; gap: 14px; align-items: center; text-align: left; padding: 12px; border-radius: 16px; background: var(--bg-2); border: 1px solid var(--line); cursor: pointer; scroll-margin-top: 120px }
+.item:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent) }
+.off { opacity: .55 }
+.itemTxt { min-width: 0 }
+.itemTxt h3 { font-size: 1.45rem; margin-bottom: 4px }
+.itemTxt p { margin: 0; color: var(--muted); font-size: .88rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+.itemFoot { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap }
+.itemFoot > span:first-child { font-family: var(--f-mono); font-size: .9rem; color: var(--accent) }
+.itemImg { width: 112px; height: 112px; border-radius: 12px; overflow: hidden; background: var(--inset) }
+.itemImg img { width: 100%; height: 100%; object-fit: cover }
+.addr { color: var(--muted); font-size: .85rem; margin: 32px 0 0; text-align: center }
+
+.bar { position: fixed; z-index: 25; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: min(720px, calc(100vw - 32px));
+  display: flex; align-items: center; gap: 12px; padding: 0 18px; min-height: 58px; border-radius: 999px; border: 0; background: var(--accent); color: var(--on-accent); font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: 0 12px 40px rgba(0,0,0,.5) }
+.bar span:nth-child(2) { flex: 1; text-align: left }
+.badge { min-width: 28px; height: 28px; border-radius: 999px; background: var(--on-accent); color: var(--accent); display: grid; place-items: center; font-size: .85rem }
+
+.overlay { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.6); display: flex; align-items: flex-end; justify-content: center; animation: fade .2s ease }
+@keyframes fade { from { opacity: 0 } }
+.sheet { position: relative; width: min(640px, 100%); max-height: 92svh; overflow-y: auto; background: var(--bg-2); border-radius: 22px 22px 0 0; border: 1px solid var(--line); border-bottom: 0; animation: up .28s cubic-bezier(.2,.8,.2,1); padding-bottom: env(safe-area-inset-bottom, 0px) }
+@keyframes up { from { transform: translateY(40px); opacity: .5 } }
+@media (min-width: 700px) { .overlay { align-items: center } .sheet { border-radius: 22px; border-bottom: 1px solid var(--line) } }
+.x { position: absolute; top: 12px; right: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0,0,0,.55); color: var(--ink); font-size: 1.5rem; line-height: 1; cursor: pointer }
+.sheetImg { aspect-ratio: 16 / 10; background: var(--inset) }
+.sheetImg img { width: 100%; height: 100%; object-fit: cover }
+.sheetBody { padding: 20px max(20px, env(safe-area-inset-right, 0px)) 24px max(20px, env(safe-area-inset-left, 0px)) }
+.sheetBody h2 { font-size: 2.4rem; margin-bottom: 8px; padding-right: 40px }
+.big { font-family: var(--f-display); font-weight: 800; font-size: 1.8rem; color: var(--accent); margin: 6px 0 4px }
+.extras { border: 0; padding: 0; margin: 16px 0 0 }
+.extras legend { margin-bottom: 8px }
+.extra { display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer }
+.extra input { width: 20px; height: 20px; accent-color: var(--accent) }
+.addRow { display: flex; gap: 12px; margin-top: 18px; align-items: center }
+.stepper { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; height: 46px; flex: none }
+.stepper button { width: 42px; height: 100%; border: 0; background: transparent; font-size: 1.3rem; cursor: pointer; color: var(--ink) }
+.stepper span { min-width: 22px; text-align: center; font-weight: 600 }
+.lines { list-style: none; margin: 0; padding: 0 }
+.lines li { display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-areas: "t p" "s s"; gap: 8px 12px; padding: 12px 0; border-bottom: 1px solid var(--line) }
+.lineTxt { grid-area: t; display: flex; flex-direction: column; min-width: 0 }
+.lines .stepper { grid-area: s; height: 38px; justify-self: start }
+.lineP { grid-area: p; font-family: var(--f-mono); font-size: .9rem; white-space: nowrap }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 14px; background: var(--inset); border: 1px solid var(--line); margin-top: 18px }
+.seg label { text-align: center; padding: 10px; border-radius: 10px; cursor: pointer; color: var(--muted); font-weight: 600; font-size: .92rem }
+.seg input { position: absolute; opacity: 0; pointer-events: none }
+.segOn { background: var(--accent); color: var(--on-accent) !important }
+.tableNote { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--inset); border: 1px solid var(--line) }
+.form { display: flex; flex-direction: column; gap: 12px; margin-top: 16px }
+.sum { margin: 18px 0 12px; display: flex; flex-direction: column; gap: 6px }
+.sum div { display: flex; justify-content: space-between; color: var(--muted) }
+.sum .total { color: var(--ink); font-weight: 600; font-size: 1.15rem; padding-top: 8px; border-top: 1px solid var(--line) }

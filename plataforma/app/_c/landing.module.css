@@ -1,0 +1,69 @@
+.page { background: var(--bg) }
+.top { position: fixed; top: 0; left: 0; right: 0; z-index: 30; padding-top: env(safe-area-inset-top, 0px); background: linear-gradient(to bottom, rgba(10,7,5,.8), transparent) }
+.topIn { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 14px }
+.brand { font-family: var(--f-display); font-weight: 900; font-size: 1.6rem; letter-spacing: .06em; text-decoration: none; line-height: 1 }
+.brand small { display: block; font-family: var(--f-mono); font-weight: 400; font-size: .58rem; letter-spacing: .2em; color: var(--muted); margin-top: 4px; text-transform: uppercase }
+.nav { display: flex; align-items: center; gap: 22px }
+.nl { text-decoration: none; color: var(--muted); font-size: .92rem }
+.nl:hover { color: var(--ink) }
+@media (max-width: 640px) { .nl { display: none } }
+
+.hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden }
+.sceneMedia { position: absolute; inset: 0 }
+.media { width: 100%; height: 100%; object-fit: cover; object-position: center }
+.kb { animation: kb 24s ease-in-out infinite alternate }
+@keyframes kb { from { transform: scale(1.02) } to { transform: scale(1.1) translateY(-1.5%) } }
+.heroShade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,8,6,.96) 0%, rgba(12,8,6,.55) 38%, rgba(12,8,6,.1) 70%), linear-gradient(to right, rgba(12,8,6,.7), transparent 55%) }
+.heroIn { position: relative; z-index: 2; width: 100%; padding-block: 120px 56px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px }
+.h1 { font-size: clamp(3.4rem, 10vw, 8.5rem); max-width: 11ch }
+.lead { max-width: 44ch; color: var(--ink); opacity: .85; font-size: 1.1rem; margin: 0 }
+.row { display: flex; gap: 10px; flex-wrap: wrap }
+
+.scene { position: relative; height: 100svh; overflow: hidden; background: #000 }
+.shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.2) 40%, transparent 65%) }
+.bar { position: absolute; left: 0; right: 0; height: 8svh; background: #000; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding-left: var(--gut-l); padding-right: var(--gut-r) }
+.barT { top: 0 } .barB { bottom: 0 }
+.rec { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); margin-right: 8px; animation: blink 1.4s infinite }
+@keyframes blink { 50% { opacity: .25 } }
+.cap { position: absolute; z-index: 3; left: var(--gut-l); right: var(--gut-r); bottom: calc(8svh + 28px); max-width: 520px; opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease }
+.cap h2 { font-size: clamp(2.8rem, 7vw, 5.4rem); margin: 8px 0 10px }
+.cap p { margin: 0; opacity: .88; max-width: 40ch; font-size: 1.05rem }
+.on { opacity: 1 !important; transform: none !important }
+.side { position: absolute; z-index: 3; right: var(--gut-r); top: 50%; transform: translateY(-46%); opacity: 0; transition: opacity .8s ease .2s; width: min(340px, 42vw) }
+.layers { list-style: none; margin: 0; padding: 18px; background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 16px }
+.layers li { display: flex; justify-content: space-between; gap: 14px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .9rem }
+.layers li span:last-child { font-family: var(--f-mono); font-size: .74rem; color: var(--accent); white-space: nowrap }
+.layers .tot { border: 0; font-weight: 600 }
+@media (max-width: 760px) {
+  .side { top: calc(8svh + 12px); bottom: auto; right: var(--gut-r); left: auto; transform: none; width: min(230px, 60vw) }
+  .layers { padding: 10px 12px }
+  .layers li { font-size: .72rem; padding: 3px 0 }
+}
+.cta { position: absolute; z-index: 3; right: var(--gut-r); bottom: calc(8svh + 28px); text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px }
+.cta h3 { font-size: 2rem }
+.price { font-family: var(--f-display); font-weight: 800; font-size: 2rem; color: var(--accent); margin-bottom: 8px }
+@media (max-width: 760px) { .cta { top: calc(8svh + 20px); bottom: auto } }
+
+.band { border-top: 1px solid var(--line); padding-block: 88px }
+.h2 { font-size: clamp(2.4rem, 6vw, 4.6rem); margin: 10px 0 28px }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width: 560px) { .grid { grid-template-columns: minmax(0, 1fr) } }
+.card { display: flex; flex-direction: column; text-decoration: none; background: var(--bg-2); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; transition: transform .2s, border-color .2s }
+.card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 50%, transparent) }
+.cardImg { aspect-ratio: 4 / 3; overflow: hidden; background: var(--inset) }
+.cardImg img { width: 100%; height: 100%; object-fit: cover }
+.cardBody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px }
+.cardTop { display: flex; justify-content: space-between; align-items: baseline; gap: 12px }
+.cardTop h3 { font-size: 1.7rem }
+.cardTop span { font-family: var(--f-mono); color: var(--accent); white-space: nowrap }
+.cardBody p { margin: 0; color: var(--muted); font-size: .94rem }
+
+.visit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px }
+@media (max-width: 760px) { .visit { grid-template-columns: minmax(0, 1fr) } }
+.hours { width: 100%; border-collapse: collapse }
+.hours td { padding: 10px 0; border-bottom: 1px solid var(--line) }
+.hours td:last-child { text-align: right; font-family: var(--f-mono); font-size: .88rem }
+.phone { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.4rem); margin: 10px 0 18px; user-select: all }
+.foot { border-top: 1px solid var(--line); padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); font-size: .9rem }
+.footIn { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap }

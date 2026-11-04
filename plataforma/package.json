@@ -1,0 +1,22 @@
+{
+  "name": "humo-plataforma",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web, carta digital y panel de administración para restaurantes. Una copia por cliente.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "engines": { "node": ">=18.18" },
+  "dependencies": {
+    "@vercel/blob": "2.8.1",
+    "bcryptjs": "3.0.3",
+    "jose": "6.2.12",
+    "next": "14.2.35",
+    "postgres": "3.4.9",
+    "qrcode": "1.5.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
