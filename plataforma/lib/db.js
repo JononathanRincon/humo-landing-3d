@@ -5,7 +5,9 @@ import { DEFAULT_SETTINGS } from "./defaults";
 const g = globalThis;
 
 function client() {
-  const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  // Preferimos el pooler en modo sesión (puerto 5432): el modo transacción (6543) mezcla
+  // respuestas cuando una página hace varias consultas a la vez.
+  const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
   if (!raw) throw new Error("Falta la variable DATABASE_URL");
   if (!g.__sql) {
     // Quita parámetros propios de Vercel/Supabase que Postgres no reconoce.
@@ -14,7 +16,7 @@ function client() {
     const local = /localhost|127\.0\.0\.1/.test(url);
     g.__sql = postgres(url, {
       ssl: local ? false : "require",
-      max: local ? 5 : 2,
+      max: local ? 5 : 3,
       idle_timeout: 20,
       connect_timeout: 10,
       onnotice: () => {},
@@ -105,3 +107,6 @@ export async function ready() {
   }
   return g.__dbReady;
 }
+
+// Convierte resultados de la base de datos en objetos simples para pasarlos a componentes del navegador.
+export const plain = rows => JSON.parse(JSON.stringify(Array.from(rows || [])));
