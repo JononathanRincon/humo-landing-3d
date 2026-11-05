@@ -5,9 +5,9 @@ import { DEFAULT_SETTINGS } from "./defaults";
 const g = globalThis;
 
 function client() {
-  // Preferimos el pooler en modo sesión (puerto 5432): el modo transacción (6543) mezcla
-  // respuestas cuando una página hace varias consultas a la vez.
-  const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
+  // Pooler en modo transacción (no reserva conexiones entre peticiones). Para que no mezcle
+  // respuestas, cada instancia envía una sola consulta a la vez (ver la cola más abajo).
+  const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (!raw) throw new Error("Falta la variable DATABASE_URL");
   if (!g.__sql) {
     // Quita parámetros propios de Vercel/Supabase que Postgres no reconoce.
@@ -16,8 +16,8 @@ function client() {
     const local = /localhost|127\.0\.0\.1/.test(url);
     g.__sql = postgres(url, {
       ssl: local ? false : "require",
-      max: local ? 5 : 3,
-      idle_timeout: 20,
+      max: 1,
+      idle_timeout: 10,
       connect_timeout: 10,
       onnotice: () => {},
       prepare: false // compatible con el pooler de Supabase
@@ -26,8 +26,16 @@ function client() {
   return g.__sql;
 }
 
+// Cola: las consultas de esta instancia se ejecutan una detrás de otra.
+let queue = Promise.resolve();
+const isTemplate = a => Array.isArray(a) && Array.isArray(a.raw);
 export const sql = new Proxy(function () {}, {
-  apply: (_t, _this, args) => client()(...args),
+  apply: (_t, _this, args) => {
+    if (!isTemplate(args[0])) return client()(...args); // ayudantes como sql(objeto, ...columnas)
+    const run = queue.then(() => client()(...args));
+    queue = run.catch(() => {});
+    return run;
+  },
   get: (_t, prop) => client()[prop]
 });
 
@@ -77,10 +85,10 @@ create table if not exists page_views (day date primary key, views int not null 
 export async function ready() {
   if (!g.__dbReady) {
     g.__dbReady = (async () => {
-      const db = client();
+      const db = sql;
       // Crear tablas solo la primera vez: evita bloqueos en cada arranque en frío.
       const [{ ok }] = await db`select to_regclass('public.page_views') is not null as ok`;
-      if (!ok) await db.unsafe(SCHEMA);
+      if (!ok) await client().unsafe(SCHEMA);
       await db`insert into settings (id, data) values (1, ${db.json(DEFAULT_SETTINGS)}) on conflict (id) do nothing`;
       const [{ n }] = await db`select count(*)::int as n from categories`;
       if (n === 0) {

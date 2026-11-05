@@ -10,16 +10,15 @@ export default async function Dashboard() {
   const s = await getSettings();
   const tz = s.timezone || "America/Bogota";
   const m = n => money(n, s.currency);
-  const today = sql`(now() at time zone ${tz})::date`;
   const [k] = await sql`
-    select count(*) filter (where (created_at at time zone ${tz})::date = ${today} and status <> 'cancelado')::int as pedidos,
-           coalesce(sum(total) filter (where (created_at at time zone ${tz})::date = ${today} and status <> 'cancelado'), 0)::int as ventas,
+    select count(*) filter (where (created_at at time zone ${tz})::date = (now() at time zone ${tz})::date and status <> 'cancelado')::int as pedidos,
+           coalesce(sum(total) filter (where (created_at at time zone ${tz})::date = (now() at time zone ${tz})::date and status <> 'cancelado'), 0)::int as ventas,
            count(*) filter (where status in ('nuevo','preparando','listo'))::int as activos,
            coalesce(sum(total) filter (where created_at > now() - interval '30 days' and status <> 'cancelado'), 0)::int as ventas30,
            count(*) filter (where created_at > now() - interval '30 days' and status <> 'cancelado')::int as pedidos30
     from orders`;
   const days = await sql`
-    with d as (select generate_series(${today} - 13, ${today}, interval '1 day')::date as day)
+    with d as (select generate_series((now() at time zone ${tz})::date - 13, (now() at time zone ${tz})::date, interval '1 day')::date as day)
     select to_char(d.day, 'DD/MM') as label, extract(dow from d.day)::int as dow,
            coalesce(sum(o.total), 0)::int as total, count(o.id)::int as n
     from d left join orders o on (o.created_at at time zone ${tz})::date = d.day and o.status <> 'cancelado'
@@ -31,9 +30,9 @@ export default async function Dashboard() {
     group by 1 order by 2 desc limit 6`;
   const views = await sql`
     select p.name, sum(v.views)::int as views from product_views v join products p on p.id = v.product_id
-    where v.day > ${today} - 30 group by p.name order by 2 desc limit 6`;
+    where v.day > (now() at time zone ${tz})::date - 30 group by p.name order by 2 desc limit 6`;
   const byType = await sql`select type, count(*)::int as n from orders where created_at > now() - interval '30 days' and status <> 'cancelado' group by type`;
-  const [pv] = await sql`select coalesce(sum(views),0)::int as n from page_views where day > ${today} - 30`;
+  const [pv] = await sql`select coalesce(sum(views),0)::int as n from page_views where day > (now() at time zone ${tz})::date - 30`;
   const st = openStatus(s);
   const avg = k.pedidos30 ? Math.round(k.ventas30 / k.pedidos30) : 0;
   const maxD = Math.max(1, ...days.map(d => d.total));
