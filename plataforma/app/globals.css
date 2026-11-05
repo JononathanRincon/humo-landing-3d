@@ -1,24 +1,26 @@
 /* Identidad: carbón cálido + llama ámbar. El acento viene de Ajustes (--accent). */
+/* Plan: la página usa el mismo gris humo de las fotos, así las hamburguesas flotan sin tarjetas.
+   Una serif de cartel de asador (Gloock) para titulares y precios; Hanken Grotesk para leer. Un solo acento: dorado brioche. */
 :root {
   color-scheme: dark;
-  --bg: #120d0a;
-  --bg-2: #1b1410;
-  --bg-3: #241a14;
-  --inset: #0d0907;
-  --ink: #f4eadc;
-  --muted: #ab9b8c;
-  --line: rgba(244, 234, 220, .13);
-  --glass: rgba(22, 15, 11, .78);
-  --accent: #f2a03d;
-  --on-accent: #1a0f07;
-  --ok: #7cc9a6;
-  --warn: #e9c54a;
-  --bad: #ec5b3c;
-  --f-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
-  --f-body: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-  --gut-l: max(16px, env(safe-area-inset-left, 0px));
-  --gut-r: max(16px, env(safe-area-inset-right, 0px));
+  --bg: #201c1b;        /* humo: fondo de las fotos */
+  --bg-2: #24201e;      /* carbón */
+  --bg-3: #2e2926;
+  --inset: #141211;
+  --ink: #ede3d3;       /* hueso */
+  --muted: #a89c8f;
+  --line: rgba(237, 227, 211, .12);
+  --glass: rgba(32, 28, 27, .84);
+  --accent: #d4a356;    /* dorado brioche (configurable) */
+  --on-accent: #201c1b;
+  --ok: #8fbf8a;
+  --warn: #d9b45a;
+  --bad: #c2452d;       /* chile: agotado y cerrado */
+  --f-display: "Gloock", "Bodoni 72", Didot, Georgia, serif;
+  --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --gut-l: max(20px, env(safe-area-inset-left, 0px));
+  --gut-r: max(20px, env(safe-area-inset-right, 0px));
 }
 * { box-sizing: border-box }
 html { -webkit-text-size-adjust: 100% }
@@ -28,14 +30,14 @@ a { color: inherit }
 button, input, select, textarea { font: inherit; color: inherit }
 [hidden] { display: none !important }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px }
-h1, h2, h3 { font-family: var(--f-display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; text-wrap: balance; letter-spacing: .005em }
-.eyebrow { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent) }
-.mono { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.02; margin: 0; text-wrap: balance; letter-spacing: -.01em }
+.eyebrow { font-family: var(--f-body); font-size: .88rem; font-weight: 600; color: var(--accent) }
+.mono { font-family: var(--f-body); font-size: .82rem; font-weight: 500 }
 .muted { color: var(--muted) }
 .num { font-variant-numeric: tabular-nums }
 .wrap { max-width: 1240px; margin: 0 auto; padding-left: var(--gut-l); padding-right: var(--gut-r) }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 999px; border: 1px solid transparent;
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 3px; border: 1px solid transparent;
   font-weight: 600; font-size: .95rem; text-decoration: none; cursor: pointer; background: transparent; transition: transform .15s, background .15s, border-color .15s, opacity .15s; white-space: nowrap }
 .btn:disabled { opacity: .45; cursor: not-allowed }
 .btn-solid { background: var(--accent); color: var(--on-accent) }
@@ -46,13 +48,13 @@ h1, h2, h3 { font-family: var(--f-display); font-weight: 900; text-transform: up
 .btn-danger { color: var(--bad); border-color: rgba(236, 91, 60, .4) }
 
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0 }
-.field > label, .field > .lbl { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted) }
-.input { width: 100%; min-height: 46px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--inset); color: var(--ink) }
+.field > label, .field > .lbl { font-size: .84rem; font-weight: 600; color: var(--muted) }
+.input { width: 100%; min-height: 48px; padding: 10px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--inset); color: var(--ink) }
 textarea.input { min-height: 90px; resize: vertical }
 .input:focus { border-color: var(--accent); outline: none }
 .hint { font-size: .82rem; color: var(--muted) }
 .err { color: var(--bad); font-size: .9rem }
-.pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-family: var(--f-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line); white-space: nowrap }
+.pill { display: inline-flex; align-items: center; gap: 7px; padding: 0; font-size: .84rem; font-weight: 500; white-space: nowrap; border: 0 !important }
 .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor }
 .pill.ok { color: var(--ok); border-color: rgba(124, 201, 166, .35) }
 .pill.bad { color: var(--bad); border-color: rgba(236, 91, 60, .35) }
@@ -67,7 +69,11 @@ textarea.input { min-height: 90px; resize: vertical }
 .toggle input:checked + span::after { transform: translateX(18px); background: var(--accent) }
 .toggle input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px }
 
-.ph { display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, var(--bg-3), var(--inset)); color: var(--muted); font-family: var(--f-display); font-weight: 900; font-size: 2.4rem }
+.ph { display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, var(--bg-3), var(--bg)); color: var(--muted); font-family: var(--f-display); font-size: 2.4rem }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important } }
 @media print { .noPrint { display: none !important } body { background: #fff } }
+
+/* Fotos que se funden con el fondo (sin bordes ni tarjetas) */
+.melt { -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%) }
+.leader { flex: 1; min-width: 16px; border-bottom: 1px dotted rgba(237, 227, 211, .35); transform: translateY(-5px) }

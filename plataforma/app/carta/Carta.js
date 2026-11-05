@@ -54,8 +54,8 @@ export default function Carta({ s, categories, products, status, table }) {
         <div className={c.headIn}>
           <a href="/" className={c.brand}>{s.name}</a>
           <div className={c.headR}>
-            {table && <span className="pill accent">Mesa {table}</span>}
-            <span className={`pill ${status.open ? "ok" : "bad"}`}>{status.open ? "Abierto" : "Cerrado"}</span>
+            {table && <span className={c.table}>Mesa {table}</span>}
+            <span className={`${c.status} ${status.open ? c.open : c.shut}`}>{status.open ? "Abierto" : "Cerrado"}</span>
           </div>
         </div>
         <nav className={c.chips} ref={chipsRef} aria-label="Categorías">
@@ -64,8 +64,8 @@ export default function Carta({ s, categories, products, status, table }) {
       </header>
 
       <div className={c.intro}>
-        <div className="eyebrow">{s.tagline}</div>
         <h1>La carta</h1>
+        <p className={c.sub}>{table ? `Estás en la mesa ${table}. Elige y te lo llevamos.` : "Elige, arma tu pedido y lo recibimos por WhatsApp."}</p>
         {!status.open && <p className={c.closed}>{status.next ? `Estamos cerrados. Abrimos ${status.next.when} a las ${status.next.at}. Puedes ver la carta y armar tu pedido.` : "Estamos cerrados en este momento."}</p>}
         {status.open && !s.orders.enabled && <p className={c.closed}>Los pedidos en línea están pausados. Puedes ver la carta.</p>}
       </div>
@@ -77,12 +77,12 @@ export default function Carta({ s, categories, products, status, table }) {
             <div className={c.items}>
               {cat.items.map(p => (
                 <button key={p.id} id={`p-${p.id}`} type="button" className={`${c.item} ${!p.available ? c.off : ""}`} onClick={() => openProduct(p)}>
+                  <div className={c.itemImg}>{p.image_url ? <img className="melt" src={p.image_url} alt="" loading="lazy" /> : <div className="ph" style={{ height: "100%" }}>{p.name[0]}</div>}</div>
                   <div className={c.itemTxt}>
-                    <h3>{p.name}</h3>
+                    <div className={c.itemLine}><h3>{p.name}</h3><span className="leader" /><span className={c.price}>{m(p.price)}</span></div>
                     <p>{p.description}</p>
-                    <div className={c.itemFoot}><span className="num">{m(p.price)}</span>{!p.available && <span className="pill bad">Agotado</span>}{p.featured && p.available && <span className="pill accent">De la casa</span>}</div>
+                    {!p.available ? <span className={c.soldout}>Agotado por hoy</span> : p.featured && <span className={c.house}>De la casa</span>}
                   </div>
-                  <div className={c.itemImg}>{p.image_url ? <img src={p.image_url} alt="" loading="lazy" /> : <div className="ph" style={{ height: "100%" }}>{p.name[0]}</div>}</div>
                 </button>
               ))}
             </div>
@@ -93,7 +93,7 @@ export default function Carta({ s, categories, products, status, table }) {
 
       {count > 0 && !view && (
         <button type="button" className={c.bar} onClick={() => setView("cart")}>
-          <span className={c.badge}>{count}</span><span>Ver pedido</span><span className="num">{m(subtotal)}</span>
+          <span className={c.badge}>{count}</span><span>Ver mi pedido</span><span className="num">{m(subtotal)}</span>
         </button>
       )}
 
@@ -123,14 +123,14 @@ function ProductSheet({ p, m, canOrder, onClose, onAdd }) {
   const toggle = n => setExtras(x => x.includes(n) ? x.filter(y => y !== n) : [...x, n]);
   return (
     <Sheet onClose={onClose} label={p.name}>
-      <div className={c.sheetImg}>{p.image_url ? <img src={p.image_url} alt={p.name} /> : <div className="ph" style={{ height: "100%" }}>{p.name[0]}</div>}</div>
+      <div className={c.sheetImg}>{p.image_url ? <img className="melt" src={p.image_url} alt={p.name} /> : <div className="ph" style={{ height: "100%" }}>{p.name[0]}</div>}</div>
       <div className={c.sheetBody}>
         <h2>{p.name}</h2>
         <p className="muted">{p.description}</p>
         <div className={`${c.big} num`}>{m(p.price)}</div>
         {!p.available ? <p className={c.closed}>Este producto se agotó por hoy.</p> : <>
           {(p.extras || []).length > 0 && <fieldset className={c.extras}>
-            <legend className="eyebrow">Adiciones</legend>
+            <legend className={c.legend}>Adiciones</legend>
             {p.extras.map(e => (
               <label key={e.name} className={c.extra}>
                 <input type="checkbox" checked={extras.includes(e.name)} onChange={() => toggle(e.name)} />
@@ -183,7 +183,7 @@ function Checkout({ s, m, cart, setQty, subtotal, table, canOrder, status, view,
   if (view === "done" && done) return (
     <Sheet onClose={close} label="Pedido enviado">
       <div className={c.sheetBody}>
-        <div className="eyebrow">Pedido #{done.id}</div>
+        <div className={c.legend}>Pedido número {done.id}</div>
         <h2 style={{ fontSize: "2.6rem", margin: "8px 0 12px" }}>Recibimos tu pedido</h2>
         <p className="muted">Quedó registrado por {m(done.total)}. Para confirmarlo, envía el mensaje que se abrió en WhatsApp. Si no se abrió, tócalo aquí:</p>
         <a className="btn btn-solid" style={{ width: "100%", marginTop: 12 }} href={done.waUrl} target="_blank" rel="noopener">Enviar por WhatsApp</a>

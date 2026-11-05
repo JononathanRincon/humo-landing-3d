@@ -11,17 +11,17 @@ export async function generateMetadata() {
   };
 }
 
-export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#120d0a" };
+export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#201c1b" };
 
 export default async function RootLayout({ children }) {
   const s = await getSettings().catch(() => null);
-  const accent = s?.accent && /^#[0-9a-f]{6}$/i.test(s.accent) ? s.accent : "#f2a03d";
+  const accent = s?.accent && /^#[0-9a-f]{6}$/i.test(s.accent) ? s.accent : "#d4a356";
   return (
     <html lang="es">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Familjen+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" />
         <style>{`:root{--accent:${accent}}`}</style>
       </head>
       <body>{children}</body>

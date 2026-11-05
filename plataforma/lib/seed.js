@@ -55,6 +55,6 @@ export const DEMO_IMAGES = {
   "Limonada de coco": "/media/acompanantes/a5-limonada.webp",
   "Cerveza artesanal": "/media/acompanantes/a6-cerveza.webp"
 };
-export const DEMO_VERSION = 1;
+export const DEMO_VERSION = 2;
 
 export const SEED_PRODUCTS = SEED_PRODUCTS_BASE.map(p => ({ ...p, image: DEMO_IMAGES[p.name] || null }));

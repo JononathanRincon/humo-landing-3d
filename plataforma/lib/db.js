@@ -101,7 +101,8 @@ export async function ready() {
         for (const [name, url] of Object.entries(DEMO_IMAGES))
           await db`update products set image_url = ${url} where name = ${name} and (image_url is null or image_url = '' or image_url = '/media/hero.webp')`;
         const media = { ...DEFAULT_SETTINGS.media, ...Object.fromEntries(Object.entries(data.media || {}).filter(([, v]) => v)) };
-        await db`update settings set data = ${db.json({ ...data, media, demoVersion: DEMO_VERSION })} where id = 1`;
+        const accent = !data.accent || data.accent === "#f2a03d" ? DEFAULT_SETTINGS.accent : data.accent;
+        await db`update settings set data = ${db.json({ ...data, media, accent, demoVersion: DEMO_VERSION })} where id = 1`;
       }
     })().catch(e => { g.__dbReady = null; throw e; });
   }

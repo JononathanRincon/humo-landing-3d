@@ -6,7 +6,7 @@ export const DEFAULT_SETTINGS = {
   address: "Calle 85 #13-09, Bogotá",
   whatsapp: "+57 300 123 4567",
   instagram: "",
-  accent: "#f2a03d",
+  accent: "#d4a356",
   currency: { locale: "es-CO", code: "COP" },
   timezone: "America/Bogota",
   hours: [
