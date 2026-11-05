@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS = {
   ],
   orders: { enabled: true, pickup: true, delivery: true, deliveryFee: 5000, minOrder: 25000, deliveryNote: "Cobertura de 4 km. Tiempo promedio 35 min." },
   tables: 12,
+  videoSpeed: 1.75,
   media: {
     hero: "/media/hero.webp",
     despiece: "/media/despiece.webp",

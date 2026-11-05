@@ -14,8 +14,9 @@ const SLOTS = [
 
 export default function Media() {
   const [media, setMedia] = useState(null);
+  const [speed, setSpeed] = useState(1.75);
   const [pct, setPct] = useState({}); const [err, setErr] = useState(""); const [toast, setToast] = useState("");
-  useEffect(() => { api("/api/admin/settings").then(j => setMedia(j.settings.media)).catch(e => setErr(e.message)); }, []);
+  useEffect(() => { api("/api/admin/settings").then(j => { setMedia(j.settings.media); setSpeed(j.settings.videoSpeed || 1.75); }).catch(e => setErr(e.message)); }, []);
   async function save(next, msg) {
     setMedia(next);
     try { await api("/api/admin/settings", { method: "PUT", body: { media: next } }); setToast(msg); setTimeout(() => setToast(""), 2200); } catch (e) { setErr(e.message); }
@@ -34,6 +35,18 @@ export default function Media() {
       <div className={a.pageH}><div><div className="eyebrow">Web</div><h1>Fotos y videos</h1></div><a href="/" target="_blank" rel="noopener" className="btn btn-ghost">Ver la web</a></div>
       <p className="muted" style={{ marginTop: -10, marginBottom: 20, maxWidth: "62ch" }}>Sube los videos en formato MP4 horizontal (16:9). Puedes hacerlo desde el celular; si la conexión es lenta, deja la pantalla abierta hasta que termine.</p>
       {err && <p className="err" role="alert">{err}</p>}
+      <div className={a.card} style={{ marginBottom: 16, display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+        <div className="field" style={{ minWidth: 220 }}>
+          <label htmlFor="vspeed">Velocidad del armado y del despiece</label>
+          <select id="vspeed" className="input" value={speed} onChange={async e => {
+            const v = Number(e.target.value); setSpeed(v);
+            try { await api("/api/admin/settings", { method: "PUT", body: { videoSpeed: v } }); setToast("Velocidad guardada"); setTimeout(() => setToast(""), 2200); } catch (x) { setErr(x.message); }
+          }}>
+            {[[1, "Normal"], [1.5, "1,5× más rápido"], [1.75, "1,75× (recomendado)"], [2, "2× más rápido"], [2.5, "2,5× más rápido"]].map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+        </div>
+        <span className="hint" style={{ maxWidth: "44ch" }}>Un video de 10 segundos dura unos 6 a 1,75×. El giro final se acelera menos para que se vea suave.</span>
+      </div>
       <div className={a.slots}>
         {SLOTS.map(slot => {
           const url = media[slot.k]; const p = pct[slot.k];

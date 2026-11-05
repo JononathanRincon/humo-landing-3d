@@ -3,31 +3,36 @@ import { useEffect, useRef, useState } from "react";
 import { money, digits } from "@/lib/format";
 import s_ from "./landing.module.css";
 
-/* Video de escena: se reproduce cuando la escena está a la vista. */
-function SceneVideo({ src, poster, loop, onNearEnd, active, label }) {
+/* Video de escena: se descarga cuando la escena se acerca y se reproduce, acelerado, cuando está a la vista. */
+function SceneVideo({ src, poster, loop, onNearEnd, active, near: soon, rate = 1, label }) {
   const ref = useRef(null);
+  const speed = v => { v.defaultPlaybackRate = rate; v.playbackRate = rate; };
   useEffect(() => {
     const v = ref.current; if (!v || !src) return;
+    speed(v);
     if (active) { try { v.currentTime = 0; } catch {} v.play().catch(() => {}); } else v.pause();
-  }, [active, src]);
-  const near = e => { const v = e.currentTarget; if (v.duration && v.currentTime > v.duration - 3) onNearEnd?.(); };
+  }, [active, src, rate]);
+  const ending = e => { const v = e.currentTarget; if (v.duration && v.currentTime > v.duration - 1.5 * rate) onNearEnd?.(); };
   if (!src) return <img className={s_.media} src={poster} alt={label} />;
-  return <video ref={ref} className={s_.media} src={active ? src : undefined} poster={poster} muted playsInline loop={loop}
-    preload="none" onEnded={onNearEnd} onTimeUpdate={near} aria-label={label} />;
+  return <video ref={ref} className={s_.media} src={soon || active ? src : undefined} poster={poster} muted playsInline loop={loop}
+    preload={soon || active ? "auto" : "none"} onLoadedMetadata={e => speed(e.currentTarget)} onEnded={onNearEnd} onTimeUpdate={ending} aria-label={label} />;
 }
 
-function Chapter({ n, total, title, text, src, poster, loop, label, aside, children }) {
+function Chapter({ n, total, title, text, src, poster, loop, label, aside, rate, children }) {
   const ref = useRef(null);
   const [active, setActive] = useState(false);
+  const [soon, setSoon] = useState(false);
   const [late, setLate] = useState(!src);
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => { setActive(e.isIntersecting); if (e.isIntersecting) setLate(!src); }, { threshold: .5 });
-    ref.current && io.observe(ref.current);
-    return () => io.disconnect();
+    // Empieza a descargar el video poco antes de llegar a la escena (solo la siguiente).
+    const pre = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSoon(true); pre.disconnect(); } }, { rootMargin: "0px 0px 60% 0px" });
+    if (ref.current) { io.observe(ref.current); pre.observe(ref.current); }
+    return () => { io.disconnect(); pre.disconnect(); };
   }, [src]);
   return (
     <section ref={ref} className={s_.chapter} aria-label={title}>
-      <div className={s_.frame}><SceneVideo src={src} poster={poster} loop={loop} active={active} label={label} onNearEnd={() => setLate(true)} /></div>
+      <div className={s_.frame}><SceneVideo src={src} poster={poster} loop={loop} active={active} near={soon} rate={rate} label={label} onNearEnd={() => setLate(true)} /></div>
       <div className={s_.chapterShade} />
       <div className={`wrap ${s_.chapterText}`}>
         <span className={s_.count}>{n} de {total}</span>
@@ -42,6 +47,7 @@ function Chapter({ n, total, title, text, src, poster, loop, label, aside, child
 
 export default function Landing({ s, featured, hero, status }) {
   const m = n => money(n, s.currency);
+  const speed = Math.min(3, Math.max(.5, Number(s.videoSpeed) || 1.75));
   const [copied, setCopied] = useState("");
   const wa = `https://wa.me/${digits(s.whatsapp)}`;
   const layers = hero?.layers || [];
@@ -85,15 +91,15 @@ export default function Landing({ s, featured, hero, status }) {
       </section>
 
       <div id="armado" />
-      <Chapter n={1} total={3} title="El armado" text={s.copy.scene2} src={s.media.v2} poster={s.media.p2 || s.media.hero} label="Los ingredientes caen y se arma la hamburguesa" />
+      <Chapter n={1} total={3} title="El armado" text={s.copy.scene2} rate={speed} src={s.media.v2} poster={s.media.p2 || s.media.hero} label="Los ingredientes caen y se arma la hamburguesa" />
       <Chapter n={2} total={3} title="Por dentro" text={hero ? `${hero.name}: ${s.copy.scene3.charAt(0).toLowerCase()}${s.copy.scene3.slice(1)}` : s.copy.scene3}
-        src={s.media.v3} poster={s.media.p3 || s.media.despiece} label="Las capas de la hamburguesa separadas"
+        rate={speed} src={s.media.v3} poster={s.media.p3 || s.media.despiece} label="Las capas de la hamburguesa separadas"
         aside={layers.length > 0 && (
           <ol className={s_.layers} aria-label="Ingredientes de arriba hacia abajo">
             {layers.map((l, i) => <li key={i} style={{ transitionDelay: `${i * 50}ms` }}><span>{l.name}</span><span className="leader" /><span>{l.grams} g</span></li>)}
             <li className={s_.tot}><span>En total</span><span className="leader" /><span>{total} g</span></li>
           </ol>)} />
-      <Chapter n={3} total={3} title="Servida" text={s.copy.scene4} src={s.media.v4} poster={s.media.p4 || s.media.hero} loop label="La hamburguesa girando sobre la pizarra">
+      <Chapter n={3} total={3} title="Servida" text={s.copy.scene4} rate={Math.min(speed, 1.25)} src={s.media.v4} poster={s.media.p4 || s.media.hero} loop label="La hamburguesa girando sobre la pizarra">
         {hero && <div className={s_.serve}>
           <span>{hero.name}</span><span className="leader" /><span className={s_.servePrice}>{m(hero.price)}</span>
         </div>}
