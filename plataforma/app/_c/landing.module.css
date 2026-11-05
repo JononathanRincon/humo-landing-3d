@@ -28,7 +28,7 @@
 .open { color: var(--ok) } .closed { color: var(--bad) }
 .h1 { font-size: clamp(3.6rem, 10.5vw, 7.5rem); line-height: .94; max-width: 9.5ch; letter-spacing: -.02em;
   animation: smoke 1.6s cubic-bezier(.2, .7, .2, 1) .2s both }
-@keyframes smoke { from { opacity: 0; filter: blur(14px); transform: translateY(10px) } to { opacity: 1; filter: blur(0); transform: none } }
+@keyframes smoke { from { opacity: .3; filter: blur(10px); transform: translateY(8px) } to { opacity: 1; filter: blur(0); transform: none } }
 .lead { max-width: 40ch; font-size: 1.15rem; line-height: 1.55; margin: 0 0 8px; color: var(--ink); opacity: .86 }
 
 /* Capítulos del armado */
