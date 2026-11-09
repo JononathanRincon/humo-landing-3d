@@ -1,8 +1,20 @@
-# HUMO · Landing 3D para hamburguesería
+# HUMO · Web, carta digital y pedidos para restaurantes
 
-Demo de portafolio: una landing de gama alta con estilo cortometraje para un negocio de hamburguesas. La hamburguesa es un modelo 3D construido en código (three.js), sin videos ni modelos pesados, así que carga rápido.
+Plataforma para restaurantes y comidas rápidas: web con la comida en video, carta digital con QR por mesa, pedidos por WhatsApp que quedan guardados, y un panel para que el dueño cambie precios, fotos, agotados y horarios sin depender de un programador.
 
-**Demo en vivo:** https://jononathanrincon.github.io/humo-landing-3d/
+**Versión actual (en vivo):** https://humo-plataforma.vercel.app
+- Carta digital: https://humo-plataforma.vercel.app/carta
+- Panel del negocio: https://humo-plataforma.vercel.app/admin
+- Código: carpeta [`plataforma/`](plataforma/) (Next.js + Postgres), con su propio README.
+
+La dirección de GitHub Pages (https://jononathanrincon.github.io/humo-landing-3d/) lleva directo a la versión actual.
+
+---
+
+## Primera versión: landing 3D
+
+La primera versión del proyecto, una landing con la hamburguesa construida en 3D con código (three.js), sigue disponible en
+https://jononathanrincon.github.io/humo-landing-3d/demo-3d/ (archivo [`demo-3d/index.html`](demo-3d/index.html)).
 
 ## Qué hace
 
@@ -17,7 +29,7 @@ Después viene la carta: cada hamburguesa se arma en 3D con sus propios ingredie
 
 ## Cómo adaptarla a un cliente
 
-Todo sale del bloque `CONFIG` al inicio del `<script>` en `index.html`:
+Todo sale del bloque `CONFIG` al inicio del `<script>` en `demo-3d/index.html`:
 
 ```js
 const CONFIG = {
